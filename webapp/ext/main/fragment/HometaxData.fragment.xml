@@ -1,0 +1,47 @@
+<c:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:c="sap.ui.core"
+	xmlns:macros="sap.fe.macros"
+>
+	<Dialog
+		id="idHometaxDialog"
+		title="상세 내역"
+		contentWidth="90%"
+		contentHeight="80vh"
+		draggable="true"
+		resizable="true"
+		        stretch="{= ${device>/system/phone} }"
+        afterOpen=".onDialogAfterOpen">
+		<content>
+			<Page showHeader="false" backgroundDesign="Transparent" class="sapUiNoContentPadding">
+				<content>
+					<VBox fitContainer="true" height="100%">
+						<macros:FilterBar
+							id="idHometaxFilterBar"
+							contextPath="/Hometax"
+							metaPath="@com.sap.vocabularies.UI.v1.SelectionFields"
+							visible="false" />
+						<macros:Table
+							id="idHometaxTable"
+							contextPath="/Hometax"
+							metaPath="@com.sap.vocabularies.UI.v1.LineItem"
+							filterBar="idHometaxFilterBar"
+							header="홈텍스 : 세금계산서"
+							rowCountMode="Auto"
+							type="GridTable"
+							variantManagement="Control"
+							enableAutoColumnWidth="true"
+						>
+							<macros:layoutData>
+								<FlexItemData growFactor="1" />
+							</macros:layoutData>
+						</macros:Table>
+					</VBox>
+				</content>
+			</Page>
+		</content>
+		<buttons>
+			<Button text="닫기" press=".onDialogClose" />
+		</buttons>
+	</Dialog>
+</c:FragmentDefinition>

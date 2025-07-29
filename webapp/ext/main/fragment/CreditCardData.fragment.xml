@@ -1,0 +1,36 @@
+<c:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:c="sap.ui.core"
+	xmlns:macros="sap.fe.macros"
+>
+	<Dialog
+		id="idCreditCardDialog"
+		title="상세 내역"
+		contentWidth="90%"
+		contentHeight="80vh"
+		draggable="true"
+		resizable="true"
+		        stretch="{= ${device>/system/phone} }"
+        afterOpen=".onDialogAfterOpen">
+
+		<content>
+			<macros:FilterBar
+				id="idCreditCardFilterBar"
+				contextPath="/CreditCard"
+				metaPath="@com.sap.vocabularies.UI.v1.SelectionFields"
+				visible="false" />
+			<macros:Table
+				id="idCreditCardTable"
+				contextPath="/CreditCard"
+				metaPath="@com.sap.vocabularies.UI.v1.LineItem"
+				filterBar="idCreditCardFilterBar"
+				header="신용카드"
+				rowCountMode="Auto"
+				enableAutoColumnWidth="true"
+			/>
+		</content>
+		<buttons>
+			<Button text="닫기" press=".onDialogClose" />
+		</buttons>
+	</Dialog>
+</c:FragmentDefinition>

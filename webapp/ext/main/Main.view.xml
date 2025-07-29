@@ -1,0 +1,323 @@
+<mvc:View xmlns:core="sap.ui.core"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:macros="sap.fe.macros"
+    xmlns:f="sap.f"
+    xmlns:c="sap.ui.core"
+    xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:svm="sap.ui.comp.smartvariants"
+    xmlns:l="sap.ui.layout"
+    xmlns:t="sap.ui.table"
+    xmlns:vm="sap.ui.fl.variants"
+    xmlns:tm="sap.m.table.columnmenu"
+    xmlns:html="http://www.w3.org/1999/xhtml" controllerName="zsbvatr1050.ext.main.Main">
+
+    <f:DynamicPage fitContent="true">
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:heading>
+                    <vm:VariantManagement id="idVariants" for="idFilterBar" />
+                </f:heading>
+            </f:DynamicPageTitle>
+        </f:title>
+        <f:header>
+            <f:DynamicPageHeader>
+                <f:content>
+                    <macros:FilterBar
+                        metaPath="/Main/@com.sap.vocabularies.UI.v1.SelectionFields"
+                        id="idFilterBar"
+                        search=".handlers.onFilterBarSearch"
+                        filterChanged=".handlers.onFilterBarFiltersChanged"
+                        initialise=".onFilterbarInitialise"
+                    />
+                </f:content>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <l:Splitter
+                id="idFisrtSplitter"
+                width="130%"
+                height="100%"
+                orientation="Horizontal">
+
+                <t:TreeTable
+                    id="idMainTable"
+                    selectionMode="None"
+                    rowMode="Auto"
+                    rows="{path: 'tableModel>/mainTable',
+                           parameters: {numberOfExpandedLevels: 2}}">
+                    <t:extension>
+                        <OverflowToolbar style="Clear">
+                            <Title id="idMainTitle" text="과세표준 검증 리포트" />
+                            <!-- <ToolbarSeparator /> -->
+                            <vm:VariantManagement id="idMainTableVariantManagement"
+                                for="idMainTable"
+                                visible="false" />
+                            <ToolbarSpacer />
+                            <Button icon="sap-icon://excel-attachment"
+                                press="onMainTableExcelExport"
+                                visible="false" />
+                        </OverflowToolbar>
+                    </t:extension>
+
+                    <t:columns>
+                        <t:Column
+                            id="idVatTypeTextColumn"
+                            minWidth="70"
+                            width="auto"
+                            resizable="true"
+                            autoResizable="true">
+                            <Label
+                                id="idARAPLabel"
+                                text="매출/매입구분" />
+                            <t:template>
+                                <Text
+                                    text="{tableModel>VatTypeText}"
+                                    wrapping="false" />
+                            </t:template>
+                        </t:Column>
+
+                        <t:Column
+                            id="idSumGroupColumn"
+                            minWidth="70"
+                            width="auto"
+                            autoResizable="true">
+                            <Label
+                                id="idGroupLabel"
+                                text="그룹" />
+                            <t:template>
+                                <Text
+                                    text="{tableModel>SumGroup}"
+                                    wrapping="false" />
+                            </t:template>
+                        </t:Column>
+
+                        <t:Column
+                            id="idVatGubunTextColumn"
+                            minWidth="90"
+                            width="auto"
+                            autoResizable="true">
+                            <Label
+                                id="idGubunTextLabel"
+                                text="구분" />
+                            <t:template>
+                                <Text text="{tableModel>VatGubunText}" wrapping="false" />
+                            </t:template>
+                        </t:Column>
+
+                        <t:Column
+                            id="idAmountColumn"
+                            width="auto"
+                            autoResizable="true">
+                            <Label
+                                id="idAmountLabel"
+                                text="과세표준" />
+                            <t:template>
+                                <VBox>
+                                    <Link
+                                        text="{ parts: [ { path: 'tableModel>Amount' },
+                                                         { path: 'tableModel>Currency' } ],
+                                                type: 'sap.ui.model.type.Currency',
+                                                formatOptions: { showMeasure: false, currencyCode: false },
+                                                constraints: { decimals: 0 }
+                                            }"
+                                        width="100%"
+                                        textAlign="Right"
+                                        subtle="true"
+                                        press="onAmountLinkPress"
+                                        visible="{= ${tableModel>level} === 3 }" />
+                                    <Text
+                                        text="{ path: 'tableModel>Amount',
+                                                type: 'sap.ui.model.type.Float',
+                                                formatOptions: { groupingEnabled: true },
+                                                constraints: { decimals: 0 }
+                                            }"
+                                        width="100%"
+                                        textAlign="Right"
+                                        visible="{= ${tableModel>level} !== 3 }" />
+                                </VBox>
+                            </t:template>
+                        </t:Column>
+
+                        <t:Column
+                            id="idTaxAmountColumn"
+                            width="auto"
+                            autoResizable="true">
+                            <Label
+                                id="idTaxAmountLabel"
+                                text="세액" />
+                            <t:template>
+                                <Text
+                                    text="{ path: 'tableModel>TaxAmount',
+                                            type: 'sap.ui.model.type.Float',
+                                            formatOptions: { groupingEnabled: true },
+                                            constraints: { decimals: 0 }
+                                            }"
+                                    width="100%"
+                                    textAlign="Right" />
+                            </t:template>
+                        </t:Column>
+
+                        <t:Column
+                            id="idHometaxColumn"
+                            width="auto"
+                            autoResizable="true">
+                            <Label
+                                id="idHometaxLabel"
+                                text="홈텍스조회" />
+                            <t:template>
+                                <HBox justifyContent="Center" width="100%">
+                                    <Button
+                                        text="조회"
+                                        press="onHometaxButtonPress"
+                                        visible="{tableModel>isHometaxButton}"
+                                        width="100%" />
+                                </HBox>
+                            </t:template>
+                        </t:Column>
+                    </t:columns>
+
+                </t:TreeTable>
+
+                <l:Splitter
+                    id="idSecondSplitter"
+                    width="57%"
+                    height="100%"
+                    orientation="Vertical">
+                    <l:VerticalLayout width="100%">
+                        <t:Table
+                            id="idPLTable"
+                            selectionMode="None"
+                            enableSelectAll="false"
+                            rowMode="Auto"
+                            rows="{tableModel>/plTable}"
+                            enableBusyIndicator="true"
+                            ariaLabelledBy="title">
+                            <t:rowMode>
+                                <t:rowmodes.Auto minRowCount="2" />
+                            </t:rowMode>
+                            <t:extension>
+                                <OverflowToolbar style="Clear">
+                                    <Title id="idPLTitle" text="손익계산서" />
+                                </OverflowToolbar>
+                            </t:extension>
+                            <t:columns>
+                                <t:Column
+                                    id="idPLTextColumn"
+                                    width="auto"
+                                    autoResizable="true">
+                                    <Label
+                                        id="idPLTextLabel"
+                                        text="손익계산서 금액" />
+                                    <t:template>
+                                        <Text text="{tableModel>Text}" wrapping="false" />
+                                    </t:template>
+                                </t:Column>
+
+                                <t:Column
+                                    id="idPLAmountColumn"
+                                    width="auto"
+                                    autoResizable="true">
+                                    <Label
+                                        id="idPLAmountLabel"
+                                        text="금액" />
+                                    <t:template>
+                                        <VBox>
+                                            <Link
+                                                text="{ parts: [ { path: 'tableModel>Amount' },
+                                                             { path: 'tableModel>Currency' } ],
+                                                    type: 'sap.ui.model.type.Currency',
+                                                    formatOptions: { showMeasure: false, currencyCode: false },
+                                                    constraints: { decimals: 0 }
+                                            }"
+                                                width="100%"
+                                                textAlign="Right"
+                                                subtle="true"
+                                                press="onPLAmountLinkPress"
+                                                visible="{= ${tableModel>Sequence} === '1'}" />
+                                            <Text
+                                                text="{ path: 'tableModel>Amount',
+                                                type: 'sap.ui.model.type.Float',
+                                                formatOptions: { groupingEnabled: true },
+                                                constraints: { decimals: 0 }
+                                            }"
+                                                width="100%"
+                                                textAlign="Right"
+                                                visible="{= ${tableModel>Sequence} === '2'}" />
+                                        </VBox>
+                                    </t:template>
+                                </t:Column>
+                            </t:columns>
+                        </t:Table>
+                    </l:VerticalLayout>
+
+                    <!-- BS테이블정의 -->
+                    <l:VerticalLayout width="100%">
+                        <l:layoutData>
+                            <l:SplitterLayoutData size="56.7%" />
+                        </l:layoutData>
+                        <t:Table
+                            id="idBSTable"
+                            selectionMode="None"
+                            enableSelectAll="false"
+                            rowMode="Auto"
+                            rows="{tableModel>/bsTable}"
+                            enableBusyIndicator="true"
+                            ariaLabelledBy="title">
+                            <t:rowMode>
+                                <t:rowmodes.Auto minRowCount="5" />
+                            </t:rowMode>
+                            <t:extension>
+                                <OverflowToolbar style="Clear">
+                                    <Title id="idBSTitle" text="BS" />
+                                </OverflowToolbar>
+                            </t:extension>
+                            <t:columns>
+                                <t:Column
+                                    id="idBSTextColumn"
+                                    width="auto"
+                                    autoResizable="true">
+                                    <Label
+                                        id="idBSTextLabel"
+                                        text="BS 부가세 계정 확인" />
+                                    <t:template>
+                                        <Text text="{tableModel>Text}" wrapping="false" />
+                                    </t:template>
+                                </t:Column>
+
+                                <t:Column
+                                    id="idBSAmountColumn"
+                                    width="auto"
+                                    autoResizable="true">
+                                    <Label
+                                        id="idBSAmountLabel"
+                                        text="금액" />
+                                    <t:template>
+                                        <Text
+                                            text="{ path: 'tableModel>Amount',
+                                                type: 'sap.ui.model.type.Float',
+                                                formatOptions: { groupingEnabled: true },
+                                                constraints: { decimals: 0 }
+                                            }"
+                                            width="100%"
+                                            textAlign="Right"
+                                            wrapping="false" />
+                                    </t:template>
+                                </t:Column>
+                            </t:columns>
+                        </t:Table>
+                    </l:VerticalLayout>
+                </l:Splitter>
+
+            </l:Splitter>
+
+        </f:content>
+        <f:dependents>
+            <core:Fragment fragmentName="zsbvatr1050.ext.main.fragment.IncomeStatement" type="XML" />
+            <core:Fragment fragmentName="zsbvatr1050.ext.main.fragment.AmountLink" type="XML" />
+            <core:Fragment fragmentName="zsbvatr1050.ext.main.fragment.HometaxData" type="XML" />
+            <core:Fragment fragmentName="zsbvatr1050.ext.main.fragment.CreditCardData" type="XML" />
+        </f:dependents>
+    </f:DynamicPage>
+
+</mvc:View>

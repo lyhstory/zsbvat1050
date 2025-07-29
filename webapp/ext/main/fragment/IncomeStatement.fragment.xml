@@ -1,0 +1,45 @@
+<core:FragmentDefinition
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:macros="sap.fe.macros">
+    <Dialog
+        id="idIncomeStatementDialog"
+        title="손익계산서 상세 내역"
+        contentWidth="60%"
+        contentHeight="90vh"
+        resizable="true"
+        draggable="true"
+        stretch="{= ${device>/system/phone} }"
+        afterOpen=".onDialogAfterOpen">
+        <content>
+            <Page showHeader="false" backgroundDesign="Transparent" class="sapUiNoContentPadding">
+                <content>
+                    <VBox fitContainer="true" height="100%">
+                        <macros:FilterBar
+                            id="idIncomeStatementFilterBar"
+                            contextPath="/IncomeStatement"
+                            metaPath="@com.sap.vocabularies.UI.v1.SelectionFields"
+                            search=".onPLDialogFilterBarSearch"
+                            visible="false" />
+                        <macros:Table
+                            id="idIncomeStatementTable"
+                            contextPath="/IncomeStatement"
+                            metaPath="@com.sap.vocabularies.UI.v1.LineItem"
+                            filterBar="idIncomeStatementFilterBar"
+                            header="손익계산서"
+                            rowCountMode="Auto"
+                            enableAutoColumnWidth="true"
+                        >
+                            <macros:layoutData>
+                                <FlexItemData growFactor="1" />
+                            </macros:layoutData>
+                        </macros:Table>
+                    </VBox>
+                </content>
+            </Page>
+        </content>
+        <buttons>
+            <Button text="닫기" press=".onDialogClose" />
+        </buttons>
+    </Dialog>
+</core:FragmentDefinition>

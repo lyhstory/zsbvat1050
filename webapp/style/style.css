@@ -1,0 +1,14 @@
+/* isSummary=true (Indication04 -> Information)인 행의 모든 셀에 배경색 적용 */
+.sapUiTableRowHighlightInformation td {
+    background-color: #E3F0FF !important; /* 연한 파란색 계열 예시 */
+}
+
+/* isTotal=true (Indication03 -> Success)인 행의 모든 셀에 배경색 적용 */
+.sapUiTableRowHighlightSuccess td {
+    background-color: #F6FCD8 !important; /* 연한 노란색/녹색 계열 예시 */
+}
+
+/* [data-sap-ui-colid$="idVatTypeTextColumn"],
+[data-sap-ui-colid$="idSumGroupColumn"] {
+    background-color: #E3F0FF !important; /* 가이드 문서의 Titanium 색상 예시 */
+/*} */
